@@ -1,0 +1,24 @@
+# This task will run the integration tests and consumer-driven contract tests of
+# the microservice and its consumers.
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: maven
+    tag: alpine
+inputs:
+- name: consumer-tests
+outputs:
+- name: release
+run:
+  path: sh
+  args:
+  - -exc
+  - |
+    cd consumer-tests/continuous-delivery-basics/user-parent/cd-user-microservice \
+    && mvn clean install -DskipTests \
+    && mv target/cd-user-microservice.jar ../../../../release/cd-user-microservice.jar \
+    && cd ../user-consumer-tests \
+    && mvn clean package
+
